@@ -13,6 +13,7 @@ import com.lilithsthrone.game.character.quests.QuestLine;
 import com.lilithsthrone.game.dialogue.DialogueFlagValue;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
 import com.lilithsthrone.game.slavery.MilkingRoom;
+import com.lilithsthrone.game.slavery.StressReliefRoom;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.rendering.SVGImages;
 import com.lilithsthrone.utils.Colour;
@@ -195,10 +196,10 @@ public enum PlaceUpgrade {
 		public String getRoomDescription(Cell c) {
 			GenericPlace place = c.getPlace();
 
-			if(place.getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_UPGRADE)) {
+			if(place.getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_LUXURIOUS)) {
 				return "xTODOx room has been upgraded descr";
 
-			} else if(place.getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_DOWNGRADE)) {
+			} else if(place.getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_INDUSTRIAL)) {
 				return "xTODOx room has been downgraded descr";
 
 			}else {
@@ -220,10 +221,21 @@ public enum PlaceUpgrade {
 					place.removePlaceUpgrade(c, upgrade);
 				}
 			}
+            if(Main.game.getSlaveryUtil().getStressReliefRoom(c.getType(), c.getLocation())==null) {
+                Main.game.getSlaveryUtil().addStressReliefRoom(new StressReliefRoom(c.getType(), c.getLocation()));
+            }
 		}
+        @Override
+        public String getAvailabilityDescription(Cell cell) {
+            if(Main.game.getCharactersTreatingCellAsHome(cell).isEmpty()) {
+                return "";
+            } else {
+                return "This room needs to be unoccupied in order to purchase this modification.";
+            }
+        }
 	},
 
-	LILAYA_STRESS_RELIEF_ROOM_DOWNGRADE(false,
+	LILAYA_STRESS_RELIEF_ROOM_INDUSTRIAL(false,
 			Colour.GENERIC_BAD,
 			"Forced Masturbation Devices",
 			"xTODOx downgrade descr.",
@@ -239,19 +251,19 @@ public enum PlaceUpgrade {
 
 		@Override
 		public boolean isAvailable(Cell cell) {
-			return !cell.getPlace().getPlaceUpgrades().contains(LILAYA_STRESS_RELIEF_ROOM_UPGRADE);
+			return !cell.getPlace().getPlaceUpgrades().contains(LILAYA_STRESS_RELIEF_ROOM_LUXURIOUS);
 		}
 
 		@Override
 		public String getAvailabilityDescription(Cell cell) {
-			if(cell.getPlace().getPlaceUpgrades().contains(LILAYA_STRESS_RELIEF_ROOM_UPGRADE)) {
+			if(cell.getPlace().getPlaceUpgrades().contains(LILAYA_STRESS_RELIEF_ROOM_LUXURIOUS)) {
 				return "You'll need to remove the xTODOx before installing this.";
 			}
 			return "";
 		}
 	},
 
-	LILAYA_STRESS_RELIEF_ROOM_UPGRADE(false,
+	LILAYA_STRESS_RELIEF_ROOM_LUXURIOUS(false,
 			Colour.GENERIC_GOOD,
 			"xTODOx name good",
 			"xTODOx upgrade descr.",
@@ -267,12 +279,12 @@ public enum PlaceUpgrade {
 
 		@Override
 		public boolean isAvailable(Cell cell) {
-			return !cell.getPlace().getPlaceUpgrades().contains(LILAYA_STRESS_RELIEF_ROOM_DOWNGRADE);
+			return !cell.getPlace().getPlaceUpgrades().contains(LILAYA_STRESS_RELIEF_ROOM_INDUSTRIAL);
 		}
 
 		@Override
 		public String getAvailabilityDescription(Cell cell) {
-			if(cell.getPlace().getPlaceUpgrades().contains(LILAYA_STRESS_RELIEF_ROOM_DOWNGRADE)) {
+			if(cell.getPlace().getPlaceUpgrades().contains(LILAYA_STRESS_RELIEF_ROOM_INDUSTRIAL)) {
 				return "You'll need to remove the Forced Masturbation Devices before installing this.";
 			}
 			return "";
@@ -835,8 +847,8 @@ public enum PlaceUpgrade {
 				PlaceUpgrade.LILAYA_EMPTY_ROOM,
 				PlaceUpgrade.LILAYA_ARTHUR_ROOM);
 		stressReliefRoomUpgrades = Util.newArrayListOfValues(
-				PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_UPGRADE,
-				PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_DOWNGRADE,
+				PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_LUXURIOUS,
+				PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_INDUSTRIAL,
 
 				PlaceUpgrade.LILAYA_EMPTY_ROOM);
 

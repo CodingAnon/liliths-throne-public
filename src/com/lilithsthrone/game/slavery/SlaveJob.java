@@ -253,6 +253,77 @@ public enum SlaveJob {
 			}
 		}
 		
+	},
+	STRESS_RELIEF(-1, "Sex Toy", "Sex Toy", "Assign this slave to the stress relief room, to use other slaves or machines or be used by them, depending on their permissions.",
+			0f, 0f,
+			0, 0, 0,
+			null,
+			Util.newHashMapOfValues(
+					new Value<>("Room Preference", Util.newArrayListOfValues(
+							SlaveJobSetting.STRESS_RELIEF_INDUSTRIAL,
+							SlaveJobSetting.STRESS_RELIEF_REGULAR,
+							SlaveJobSetting.STRESS_RELIEF_LUXURIOUS,
+							SlaveJobSetting.STRESS_RELIEF_NO_PREFERENCE))),
+			Util.newArrayListOfValues(
+					SlaveJobSetting.STRESS_RELIEF_NO_PREFERENCE),
+			WorldType.LILAYAS_HOUSE_GROUND_FLOOR,
+			PlaceType.LILAYA_HOME_ROOM_WINDOW_GROUND_FLOOR) {
+
+		@Override
+		public int getSlaveLimit() {
+			return Main.game.getSlaveryUtil().getStressReliefRooms().size()*8;
+		}
+
+		/*@Override
+		public float getAffectionGain(GameCharacter slave) {
+			if(slave.hasFetish(Fetish.FETISH_LACTATION_SELF)) {
+				return 2f;
+			} else {
+				return -0.25f;
+			}
+		}*/
+
+		@Override
+		public boolean isAvailable(GameCharacter character) {
+			return Main.game.getPlayer().getSlavesWorkingJob(SlaveJob.STRESS_RELIEF) < getSlaveLimit();
+		}
+
+		public String getAvailabilityText(GameCharacter character) {
+			if(!isAvailable(character)) {
+				return "Not enough space in stress relief rooms!";
+			}
+
+			return super.getAvailabilityText(character);
+		}
+
+		@Override
+		public WorldType getWorldLocation(GameCharacter character) {
+			Cell c = StressReliefRoom.getStressReliefCell(character);
+			if(c==null) {
+				return null;
+			}
+			return c.getType();
+		}
+
+		@Override
+		public PlaceType getPlaceLocation(GameCharacter character) {
+			Cell c = StressReliefRoom.getStressReliefCell(character);
+			if(c==null) {
+				return null;
+			}
+			return c.getPlace().getPlaceType();
+		}
+
+		@Override
+		public void sendToWorkLocation(GameCharacter slave) {
+			Cell c = StressReliefRoom.getStressReliefCell(slave);
+			if(c!=null) {
+				if(c.getType()!=slave.getWorldLocation() || c.getLocation()!=slave.getLocation()) {
+					slave.setLocation(c.getType(), c.getLocation(), false);
+				}
+			}
+		}
+
 	}
 	
 	;

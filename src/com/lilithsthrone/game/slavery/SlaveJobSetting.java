@@ -14,6 +14,11 @@ public enum SlaveJobSetting {
 	SEX_ANAL(Colour.GENERIC_SEX, "Allow Anal", "Anal", "Allow this slave to receive anal sex."),
 	SEX_NIPPLES(Colour.GENERIC_SEX, "Allow Nipple Penetration", "Nipples", "Allow this slave to receive penetrative nipple sex (if they have penetrable nipples)."),
 
+	STRESS_RELIEF_NO_PREFERENCE(Colour.BASE_GREY, "No Preference", "SR_N", "Set this slave to work in any available stress relief room."),
+	STRESS_RELIEF_INDUSTRIAL(Colour.GENERIC_BAD, "Machines", "SR_M", "Set this slave to work in a industrial stress relief room."),
+	STRESS_RELIEF_REGULAR(Colour.BASE_GREY, "Regular", "SR_R", "Set this slave to work in a regular stress relief room."),
+	STRESS_RELIEF_LUXURIOUS(Colour.GENERIC_GOOD, "Luxurious", "SR_R", "Set this slave to work in a luxurious stress relief room."),
+
 	MILKING_NO_PREFERENCE(Colour.BASE_GREY, "No Preference", "NP", "Set this slave to work in any available milking room."),
 	MILKING_INDUSTRIAL(Colour.GENERIC_MINOR_BAD, "Industrial Milking", "IN", "Set this slave to work in a milking room with industrial milkers."),
 	MILKING_REGULAR(Colour.BASE_YELLOW_LIGHT, "Regular Milking", "RG", "Set this slave to work in a milking room with regular milkers."),

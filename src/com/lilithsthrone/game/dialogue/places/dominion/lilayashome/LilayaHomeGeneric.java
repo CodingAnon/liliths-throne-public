@@ -235,7 +235,9 @@ public class LilayaHomeGeneric {
 			} else {
 				return new Response("Slave List", "You'll need a slaver license before you can access this menu!",  null);
 			}
-			
+        } else if(stressReliefRoom) {
+
+
 		} else if(milkingRoom) {
 			MilkingRoom room = Main.game.getSlaveryUtil().getMilkingRoom(Main.game.getPlayerCell().getType(), Main.game.getPlayerCell().getLocation());
 			

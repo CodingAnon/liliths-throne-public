@@ -50,7 +50,8 @@ public class SlaveryUtil implements XMLSaving {
 	private int generatedUpkeep;
 	
 	private List<MilkingRoom> milkingRooms;
-	
+	private List<StressReliefRoom> stressReliefRooms;
+
 	// Slave income:
 	private Map<NPC, Integer> slaveDailyIncome;
 	
@@ -65,6 +66,7 @@ public class SlaveryUtil implements XMLSaving {
 		generatedUpkeep = 0;
 		
 		milkingRooms = new ArrayList<>();
+		stressReliefRooms = new ArrayList<>();
 		
 		slaveDailyIncome = new HashMap<>();
 	}
@@ -77,6 +79,9 @@ public class SlaveryUtil implements XMLSaving {
 		CharacterUtils.addAttribute(doc, element, "generatedUpkeep", String.valueOf(Main.game.getSlaveryUtil().getGeneratedUpkeep()));
 		
 		for(MilkingRoom room : this.getMilkingRooms()) {
+			room.saveAsXML(element, doc);
+		}
+		for(StressReliefRoom room : this.getStressReliefRooms()) {
 			room.saveAsXML(element, doc);
 		}
 		
@@ -97,6 +102,15 @@ public class SlaveryUtil implements XMLSaving {
 				
 				if(slaveryUtil.getMilkingRoom(room.getWorldType(), room.getLocation())==null) {
 					slaveryUtil.addMilkingRoom(room);
+				}
+			}
+			for(int i=0; i<parentElement.getElementsByTagName("stressReliefRoom").getLength(); i++){
+				Element e = ((Element)parentElement.getElementsByTagName("stressReliefRoom").item(i));
+
+				StressReliefRoom room = StressReliefRoom.loadFromXML(e, doc);
+
+				if(slaveryUtil.getStressReliefRoom(room.getWorldType(), room.getLocation())==null) {
+					slaveryUtil.addStressReliefRoom(room);
 				}
 			}
 			
@@ -1012,16 +1026,7 @@ public class SlaveryUtil implements XMLSaving {
 		
 		return null;
 	}
-	
-	
-	public MilkingRoom getMilkingRoom(WorldType worldType, Vector2i location) {
-		for(MilkingRoom room : getMilkingRooms()) {
-			if(room.getWorldType() == worldType && room.getLocation().equals(location)) {
-				return room;
-			}
-		}
-		return null;
-	}
+
 	
 	public List<MilkingRoom> getMilkingRooms() {
 		return milkingRooms;
@@ -1033,6 +1038,35 @@ public class SlaveryUtil implements XMLSaving {
 	
 	public boolean removeMilkingRoom(MilkingRoom milkingRoom) {
 		return milkingRooms.remove(milkingRoom);
+	}
+
+	public MilkingRoom getMilkingRoom(WorldType worldType, Vector2i location) {
+		for(MilkingRoom room : getMilkingRooms()) {
+			if(room.getWorldType() == worldType && room.getLocation().equals(location)) {
+				return room;
+			}
+		}
+		return null;
+	}
+
+	public List<StressReliefRoom> getStressReliefRooms() {
+		return stressReliefRooms;
+	}
+
+	public boolean addStressReliefRoom(StressReliefRoom stressReliefRoom) {
+		return stressReliefRooms.add(stressReliefRoom);
+	}
+
+	public boolean removeStressReliefRoom(StressReliefRoom stressReliefRoom) {
+		return stressReliefRooms.remove(stressReliefRoom);
+	}
+	public StressReliefRoom getStressReliefRoom(WorldType worldType, Vector2i location) {
+		for(StressReliefRoom room : getStressReliefRooms()) {
+			if(room.getWorldType() == worldType && room.getLocation().equals(location)) {
+				return room;
+			}
+		}
+		return null;
 	}
 
 	public void payOutBalance() {
