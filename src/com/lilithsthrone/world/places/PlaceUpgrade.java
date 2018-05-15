@@ -175,7 +175,110 @@ public enum PlaceUpgrade {
 			}
 		}
 	},
-	
+
+	LILAYA_STRESS_RELIEF_ROOM(true,
+			Colour.GENERIC_ARCANE,
+			"Stress Relief Room",
+			"Installing some beds in this room allows you to watch your slaves relieving some stress with each other.",
+			"This room has been equipped with some comfortable beds for your slaves to let them relieve some stress.",
+			"This room has been equipped with some comfortable beds for your slaves to let them relieve some stress."
+					+ " Four beds are set along the left-hand side of the wall, with the other four being placed on the opposite side of the room.",
+			1000,
+			0,
+			0,
+			0,
+			0,
+			0,
+			null) {
+
+		@Override
+		public String getRoomDescription(Cell c) {
+			GenericPlace place = c.getPlace();
+
+			if(place.getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_UPGRADE)) {
+				return "xTODOx room has been upgraded descr";
+
+			} else if(place.getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_DOWNGRADE)) {
+				return "xTODOx room has been downgraded descr";
+
+			}else {
+				return "This room has been equipped with some comfortable beds for your slaves to let them relieve some stress."
+						+ " Four beds are set along the left-hand side of the wall, with the other four being placed on the opposite side of the room.";
+			}
+		}
+
+		@Override
+		public boolean isAvailable(Cell cell) {
+			return Main.game.getCharactersTreatingCellAsHome(cell).isEmpty() && !cell.getPlace().getPlaceUpgrades().contains(LILAYA_ARTHUR_ROOM);
+		}
+
+		@Override
+		public void applyInstallationEffects(Cell c) {
+			GenericPlace place = c.getPlace();
+			for(PlaceUpgrade upgrade : PlaceUpgrade.values()) {
+				if(upgrade != LILAYA_STRESS_RELIEF_ROOM) {
+					place.removePlaceUpgrade(c, upgrade);
+				}
+			}
+		}
+	},
+
+	LILAYA_STRESS_RELIEF_ROOM_DOWNGRADE(false,
+			Colour.GENERIC_BAD,
+			"Forced Masturbation Devices",
+			"xTODOx downgrade descr.",
+			"xTODOx downgrade descr. 2",
+			"xTODOx downgrade descr. 3",
+			250,
+			100,
+			-10,
+			0,
+			-0.1f,
+			0.1f,
+			null) {
+
+		@Override
+		public boolean isAvailable(Cell cell) {
+			return !cell.getPlace().getPlaceUpgrades().contains(LILAYA_STRESS_RELIEF_ROOM_UPGRADE);
+		}
+
+		@Override
+		public String getAvailabilityDescription(Cell cell) {
+			if(cell.getPlace().getPlaceUpgrades().contains(LILAYA_STRESS_RELIEF_ROOM_UPGRADE)) {
+				return "You'll need to remove the xTODOx before installing this.";
+			}
+			return "";
+		}
+	},
+
+	LILAYA_STRESS_RELIEF_ROOM_UPGRADE(false,
+			Colour.GENERIC_GOOD,
+			"xTODOx name good",
+			"xTODOx upgrade descr.",
+			"xTODOx upgrade descr. 2",
+			"xTODOx upgrade descr. 3",
+			250,
+			100,
+			-10,
+			0,
+			0.1f,
+			-0.1f,
+			null) {
+
+		@Override
+		public boolean isAvailable(Cell cell) {
+			return !cell.getPlace().getPlaceUpgrades().contains(LILAYA_STRESS_RELIEF_ROOM_DOWNGRADE);
+		}
+
+		@Override
+		public String getAvailabilityDescription(Cell cell) {
+			if(cell.getPlace().getPlaceUpgrades().contains(LILAYA_STRESS_RELIEF_ROOM_DOWNGRADE)) {
+				return "You'll need to remove the Forced Masturbation Devices before installing this.";
+			}
+			return "";
+		}
+	},
+
 	LILAYA_MILKING_ROOM(true,
 			Colour.BASE_ORANGE,
 			"Milking Room",
@@ -678,7 +781,7 @@ public enum PlaceUpgrade {
 	;
 	
 	
-	private static ArrayList<PlaceUpgrade> coreRoomUpgrades, slaveQuartersUpgrades, getMilkingUpgrades;
+	private static ArrayList<PlaceUpgrade> coreRoomUpgrades, slaveQuartersUpgrades, stressReliefRoomUpgrades, getMilkingUpgrades;
 	
 	public static ArrayList<PlaceUpgrade> getCoreRoomUpgrades() {
 		if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.arthursRoomInstalled) || Main.game.getPlayer().isQuestProgressLessThan(QuestLine.MAIN, Quest.MAIN_1_J_ARTHURS_ROOM)) {
@@ -697,6 +800,14 @@ public enum PlaceUpgrade {
 		}
 		return slaveQuartersUpgrades;
 	}
+	public static ArrayList<PlaceUpgrade> getStressReliefRoomUpgrades() {
+		if(Main.game.getDialogueFlags().hasFlag(DialogueFlagValue.arthursRoomInstalled) || Main.game.getPlayer().isQuestProgressLessThan(QuestLine.MAIN, Quest.MAIN_1_J_ARTHURS_ROOM)) {
+			ArrayList<PlaceUpgrade> listArthurRemoved = new ArrayList<>(stressReliefRoomUpgrades);
+			listArthurRemoved.remove(PlaceUpgrade.LILAYA_ARTHUR_ROOM);
+			return listArthurRemoved;
+		}
+		return stressReliefRoomUpgrades;
+	}
 	
 	public static ArrayList<PlaceUpgrade> getMilkingUpgrades() {
 		return getMilkingUpgrades;
@@ -708,6 +819,7 @@ public enum PlaceUpgrade {
 				PlaceUpgrade.LILAYA_SLAVE_ROOM_DOUBLE,
 				
 				PlaceUpgrade.LILAYA_MILKING_ROOM,
+				PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM,
 				
 				PlaceUpgrade.LILAYA_ARTHUR_ROOM);
 		
@@ -722,7 +834,12 @@ public enum PlaceUpgrade {
 				
 				PlaceUpgrade.LILAYA_EMPTY_ROOM,
 				PlaceUpgrade.LILAYA_ARTHUR_ROOM);
-		
+		stressReliefRoomUpgrades = Util.newArrayListOfValues(
+				PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_UPGRADE,
+				PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_DOWNGRADE,
+
+				PlaceUpgrade.LILAYA_EMPTY_ROOM);
+
 		getMilkingUpgrades = Util.newArrayListOfValues(
 				PlaceUpgrade.LILAYA_MILKING_ROOM_ARTISAN_MILKERS,
 				PlaceUpgrade.LILAYA_MILKING_ROOM_INDUSTRIAL_MILKERS,

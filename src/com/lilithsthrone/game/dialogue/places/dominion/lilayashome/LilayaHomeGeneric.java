@@ -194,10 +194,10 @@ public class LilayaHomeGeneric {
 		}
 	};
 	
-	private static Response getRoomResponse(int index, boolean milkingRoom) {
+	private static Response getRoomResponse(int index, boolean milkingRoom, boolean stressReliefRoom) {
 		List<NPC> charactersPresent = Main.game.getNonCompanionCharactersPresent();
 		List<NPC> slavesAssignedToRoom = new ArrayList<>();
-		if(milkingRoom) {
+		if(milkingRoom || stressReliefRoom) {
 			slavesAssignedToRoom.addAll(charactersPresent);
 		} else {
 			for(String slave : Main.game.getPlayer().getSlavesOwned()) {
@@ -669,7 +669,10 @@ public class LilayaHomeGeneric {
 
 		@Override
 		public Response getResponse(int responseTab, int index) {
-			return getRoomResponse(index, Main.game.getPlayer().getLocationPlace().getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_MILKING_ROOM));
+			return getRoomResponse(
+					index,
+					Main.game.getPlayer().getLocationPlace().getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_MILKING_ROOM),
+					Main.game.getPlayer().getLocationPlace().getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM));
 		}
 	};
 	
@@ -696,7 +699,10 @@ public class LilayaHomeGeneric {
 
 		@Override
 		public Response getResponse(int responseTab, int index) {
-			return getRoomResponse(index, Main.game.getPlayer().getLocationPlace().getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_MILKING_ROOM));
+			return getRoomResponse(
+					index,
+					Main.game.getPlayer().getLocationPlace().getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_MILKING_ROOM),
+					Main.game.getPlayer().getLocationPlace().getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM));
 		}
 	};
 	
@@ -724,7 +730,10 @@ public class LilayaHomeGeneric {
 
 		@Override
 		public Response getResponse(int responseTab, int index) {
-			return getRoomResponse(index, Main.game.getPlayer().getLocationPlace().getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_MILKING_ROOM));
+			return getRoomResponse(
+					index,
+					Main.game.getPlayer().getLocationPlace().getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_MILKING_ROOM),
+					Main.game.getPlayer().getLocationPlace().getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM));
 		}
 	};
 	

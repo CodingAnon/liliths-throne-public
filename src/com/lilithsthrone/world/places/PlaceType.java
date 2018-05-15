@@ -464,6 +464,8 @@ public enum PlaceType {
 				
 			} else if(upgrades.contains(PlaceUpgrade.LILAYA_MILKING_ROOM)) {
 				return PlaceUpgrade.getMilkingUpgrades();
+			} else if(upgrades.contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM)){
+				return PlaceUpgrade.getStressReliefRoomUpgrades();
 			}
 			
 			return PlaceUpgrade.getCoreRoomUpgrades();
@@ -479,6 +481,9 @@ public enum PlaceType {
 			} else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM_DOUBLE)) {
 				return PlaceType.getSVGOverride("dominion/lilayasHome/roomSlaveDouble", Colour.BASE_MAGENTA);
 				
+			} else if(upgrades.contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM)) {
+				return PlaceType.getSVGOverride("dominion/lilayasHome/roomStressRelief", Colour.BASE_GREEN);
+
 			} else {
 				return SVGString;
 			}
@@ -506,6 +511,8 @@ public enum PlaceType {
 				
 			} else if(upgrades.contains(PlaceUpgrade.LILAYA_MILKING_ROOM)) {
 				return PlaceUpgrade.getMilkingUpgrades();
+			} else if(upgrades.contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM)){
+				return PlaceUpgrade.getStressReliefRoomUpgrades();
 			}
 			
 			return PlaceUpgrade.getCoreRoomUpgrades();
@@ -521,6 +528,9 @@ public enum PlaceType {
 			} else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM_DOUBLE)) {
 				return PlaceType.getSVGOverride("dominion/lilayasHome/roomSlaveDouble", Colour.BASE_MAGENTA);
 				
+			} else if(upgrades.contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM)) {
+				return PlaceType.getSVGOverride("dominion/lilayasHome/roomStressRelief", Colour.BASE_GREEN);
+
 			} else {
 				return SVGString;
 			}
@@ -548,6 +558,8 @@ public enum PlaceType {
 				
 			} else if(upgrades.contains(PlaceUpgrade.LILAYA_MILKING_ROOM)) {
 				return PlaceUpgrade.getMilkingUpgrades();
+			} else if(upgrades.contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM)){
+				return PlaceUpgrade.getStressReliefRoomUpgrades();
 			}
 			
 			return PlaceUpgrade.getCoreRoomUpgrades();
@@ -563,6 +575,9 @@ public enum PlaceType {
 			} else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM_DOUBLE)) {
 				return PlaceType.getSVGOverride("dominion/lilayasHome/roomSlaveDouble", Colour.BASE_MAGENTA);
 				
+			} else if(upgrades.contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM)) {
+				return PlaceType.getSVGOverride("dominion/lilayasHome/roomStressRelief", Colour.BASE_GREEN);
+
 			} else {
 				return SVGString;
 			}
@@ -590,6 +605,8 @@ public enum PlaceType {
 				
 			} else if(upgrades.contains(PlaceUpgrade.LILAYA_MILKING_ROOM)) {
 				return PlaceUpgrade.getMilkingUpgrades();
+			} else if(upgrades.contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM)){
+				return PlaceUpgrade.getStressReliefRoomUpgrades();
 			}
 			
 			return PlaceUpgrade.getCoreRoomUpgrades();
@@ -605,6 +622,9 @@ public enum PlaceType {
 			} else if(upgrades.contains(PlaceUpgrade.LILAYA_SLAVE_ROOM_DOUBLE)) {
 				return PlaceType.getSVGOverride("dominion/lilayasHome/roomSlaveDouble", Colour.BASE_MAGENTA);
 				
+			} else if(upgrades.contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM)) {
+				return PlaceType.getSVGOverride("dominion/lilayasHome/roomStressRelief", Colour.BASE_GREEN);
+
 			} else {
 				return SVGString;
 			}
