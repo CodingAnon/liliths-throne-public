@@ -2,6 +2,7 @@ package com.lilithsthrone.game.slavery;
 
 import com.lilithsthrone.game.character.CharacterUtils;
 import com.lilithsthrone.game.character.GameCharacter;
+import com.lilithsthrone.game.character.npc.NPC;
 import com.lilithsthrone.main.Main;
 import com.lilithsthrone.utils.Vector2i;
 import com.lilithsthrone.utils.XMLSaving;
@@ -11,13 +12,13 @@ import com.lilithsthrone.world.places.PlaceUpgrade;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class StressReliefRoom implements XMLSaving {
 
         private WorldType worldType;
         private Vector2i location;
+        private Map<NPC, StressReliefRoomPartnerData> whoWithWho = new HashMap<>();
 
         public StressReliefRoom(WorldType worldType, Vector2i location) {
 
@@ -25,6 +26,31 @@ public class StressReliefRoom implements XMLSaving {
             this.location = new Vector2i(location.getX(), location.getY());
         }
 
+        public void addNewPairing(NPC active, NPC passive){
+            whoWithWho.put(active, new StressReliefRoomPartnerData(passive, StressReliefRoomActionCategories.FUCKING));
+            whoWithWho.put(passive, new StressReliefRoomPartnerData(active, StressReliefRoomActionCategories.GETTING_FUCKED));
+        }
+        public void addMasturbator(NPC masturbator){
+            whoWithWho.put(masturbator, new StressReliefRoomPartnerData(null, StressReliefRoomActionCategories.MASTURBATING));
+        }
+        public void addWatcher(NPC watcher){
+            whoWithWho.put(watcher, new StressReliefRoomPartnerData(null, StressReliefRoomActionCategories.WATCHING));
+        }
+        public void clearAllPairings(){
+            whoWithWho.clear();
+        }
+        public boolean isSlaveOccupied(NPC character){
+            if(whoWithWho.isEmpty()){
+                return false;
+            } else {
+                return whoWithWho.containsKey(character);
+            }
+        }
+        public StressReliefRoomPartnerData getSlaveActionData(NPC slave){
+            return whoWithWho.getOrDefault(slave, null);
+        }
+
+        //!TODO! save the new members
         public Element saveAsXML(Element parentElement, Document doc) {
             Element element = doc.createElement("stressReliefRoom");
             parentElement.appendChild(element);
@@ -91,4 +117,8 @@ public class StressReliefRoom implements XMLSaving {
         public Vector2i getLocation() {
             return location;
         }
-        }
+
+    public Map<NPC, StressReliefRoomPartnerData> getWhoWithWho() {
+        return whoWithWho;
+    }
+}

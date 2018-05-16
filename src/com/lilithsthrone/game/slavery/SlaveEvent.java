@@ -50,6 +50,9 @@ public enum SlaveEvent {
 	JOB_PROSTITUTE("Prostitute", "[npc.Name] worked as a prostitute in Angel's Kiss."),
 
 	JOB_IDLE("Resting", "<i>Placeholder event.</i>"),
+
+	JOB_STRESS_RELIEF("[style.boldSex(Stress Relief)]", "[npc.Name] went to the stress relief room..."),
+
 	;
 	
 	private String name;

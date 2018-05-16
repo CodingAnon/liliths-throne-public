@@ -1,11 +1,8 @@
 package com.lilithsthrone.game.slavery;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.lilithsthrone.world.places.PlaceUpgrade;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -250,7 +247,11 @@ public class SlaveryUtil implements XMLSaving {
 					}
 				}
 				
-				if(Math.random()<0.05f || slave.getSlaveJob()==SlaveJob.MILKING || (Math.random()<0.5f && (slave.getSlaveJob()==SlaveJob.PUBLIC_STOCKS || slave.getSlaveJob()==SlaveJob.PROSTITUTE))) {
+				if(Math.random()<0.05f ||
+						slave.getSlaveJob()==SlaveJob.MILKING ||
+						slave.getSlaveJob()==SlaveJob.STRESS_RELIEF ||
+						(Math.random()<0.5f && (slave.getSlaveJob()==SlaveJob.PUBLIC_STOCKS ||
+								slave.getSlaveJob()==SlaveJob.PROSTITUTE))) {
 					List<SlaveryEventLogEntry> entries = generateEvents(hour, slave);
 					for(SlaveryEventLogEntry e : entries) {
 						Main.game.addSlaveryEvent(day, slave, e);
@@ -315,6 +316,10 @@ public class SlaveryUtil implements XMLSaving {
 				generatedUpkeep += c.getPlace().getUpkeep();
 			}
 		}
+		for(StressReliefRoom stressReliefRoom : getStressReliefRooms()){
+			stressReliefRoom.clearAllPairings();
+		}
+
 		
 	}
 
@@ -353,11 +358,156 @@ public class SlaveryUtil implements XMLSaving {
 				case STRESS_RELIEF: {
 					Cell c = StressReliefRoom.getStressReliefCell(slave);
 					StressReliefRoom room = this.getStressReliefRoom(c.getType(), c.getLocation());
+					List<NPC> charactersPresent = Main.game.getCharactersPresent(slave.getWorldLocation(), slave.getLocation());
+					Collections.shuffle(charactersPresent); //!TODO! ordering always the same?
+
+					if (room.isSlaveOccupied(slave)){
+						switch(room.getSlaveActionData(slave).getAction()){
+							case FUCKING:
+								events.add(new SlaveryEventLogEntry(hour, slave,
+										SlaveEvent.JOB_STRESS_RELIEF,
+										null,
+										Util.newArrayListOfValues(UtilText.parse(slave, room.getSlaveActionData(slave).getPartner(),"[npc1.Name] gave [npc2.name] a "+slave.getSexPaceDomPreference().getName()+" fucking.")),
+										true));
+								return events;
+							case GETTING_FUCKED:
+								events.add(new SlaveryEventLogEntry(hour, slave,
+										SlaveEvent.JOB_STRESS_RELIEF,
+										null,
+										Util.newArrayListOfValues(UtilText.parse(slave, room.getSlaveActionData(slave).getPartner(),"[npc1.Name] got a "+slave.getSexPaceDomPreference().getName()+" fucking by [npc2.name].")),
+										true));
+								return events;
+							case MASTURBATING:
+								events.add(new SlaveryEventLogEntry(hour, slave,
+										SlaveEvent.JOB_STRESS_RELIEF,
+										null,
+										Util.newArrayListOfValues(
+												"[npc1.Name] "+
+														(c.getPlace().getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_INDUSTRIAL)?"used a machine to pleasure":"pleasured")
+														+" [npc1.her]self."),
+										true));
+								return events;
+							case WATCHING:
+								events.add(new SlaveryEventLogEntry(hour, slave,
+										SlaveEvent.JOB_STRESS_RELIEF,
+										null,
+										Util.newArrayListOfValues("[npc1.Name] had to watch..."),
+										true));
+								return events;
+						}
+					}
+
+
+					if(c.getPlace().getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_INDUSTRIAL)){
+
+						if(slave.hasSlavePermissionSetting(SlavePermissionSetting.SEX_MASTURBATE)) {
+							room.addMasturbator(slave);
+							events.add(new SlaveryEventLogEntry(hour, slave,
+									SlaveEvent.JOB_STRESS_RELIEF,
+									null,
+									Util.newArrayListOfValues("[npc1.Name] used a machine to pleasure [npc1.her]self."),
+									true));
+							return events;
+						} else {
+							room.addWatcher(slave);
+							events.add(new SlaveryEventLogEntry(hour, slave,
+									SlaveEvent.JOB_STRESS_RELIEF,
+									null,
+									Util.newArrayListOfValues("[npc1.Name] had to watch..."),
+									true));
+							return events;
+						}
+
+					} else {
+						if(slave.hasSlavePermissionSetting(SlavePermissionSetting.SEX_INITIATE_SLAVES)){
+							for (NPC npc: charactersPresent){
+								if (!npc.equals(slave)) {
+									if(npc.hasSlavePermissionSetting(SlavePermissionSetting.SEX_RECEIVE_SLAVES)){
+										if(!room.isSlaveOccupied(npc)){
+											room.addNewPairing(slave, npc);
+											events.add(new SlaveryEventLogEntry(hour, slave,
+													SlaveEvent.JOB_STRESS_RELIEF,
+													null,
+													Util.newArrayListOfValues(UtilText.parse(slave, npc,"[npc1.Name] gave [npc2.name] a "+slave.getSexPaceDomPreference().getName()+" fucking.")),
+													true));
+											return events;
+										}
+									}
+								}
+							}
+							if(slave.hasSlavePermissionSetting(SlavePermissionSetting.SEX_MASTURBATE)) {
+								room.addMasturbator(slave);
+								events.add(new SlaveryEventLogEntry(hour, slave,
+										SlaveEvent.JOB_STRESS_RELIEF,
+										null,
+										Util.newArrayListOfValues("[npc1.Name] pleasured [npc1.her]self."),
+										true));
+								return events;
+							} else {
+								room.addWatcher(slave);
+								events.add(new SlaveryEventLogEntry(hour, slave,
+										SlaveEvent.JOB_STRESS_RELIEF,
+										null,
+										Util.newArrayListOfValues("[npc1.Name] had to watch..."),
+										true));
+								return events;
+							}
+						} else if(slave.hasSlavePermissionSetting(SlavePermissionSetting.SEX_RECEIVE_SLAVES)) {
+							for (NPC npc: charactersPresent){
+								if (!npc.equals(slave)) {
+									if(npc.hasSlavePermissionSetting(SlavePermissionSetting.SEX_INITIATE_SLAVES)){
+										if(!room.isSlaveOccupied(npc)){
+											room.addNewPairing(slave, npc);
+											events.add(new SlaveryEventLogEntry(hour, slave,
+													SlaveEvent.JOB_STRESS_RELIEF,
+													null,
+													Util.newArrayListOfValues(UtilText.parse(slave, npc,"[npc1.Name] got a "+slave.getSexPaceDomPreference().getName()+" fucking by [npc2.name].")),
+													true));
+											return events;
+										}
+									}
+								}
+							}
+							if(slave.hasSlavePermissionSetting(SlavePermissionSetting.SEX_MASTURBATE)) {
+								room.addMasturbator(slave);
+								events.add(new SlaveryEventLogEntry(hour, slave,
+										SlaveEvent.JOB_STRESS_RELIEF,
+										null,
+										Util.newArrayListOfValues("[npc1.Name] pleasured [npc1.her]self."),
+										true));
+								return events;
+							} else {
+								room.addWatcher(slave);
+								events.add(new SlaveryEventLogEntry(hour, slave,
+										SlaveEvent.JOB_STRESS_RELIEF,
+										null,
+										Util.newArrayListOfValues("[npc1.Name] had to watch..."),
+										true));
+								return events;
+							}
+						} else if(slave.hasSlavePermissionSetting(SlavePermissionSetting.SEX_MASTURBATE)) {
+							room.addMasturbator(slave);
+							events.add(new SlaveryEventLogEntry(hour, slave,
+									SlaveEvent.JOB_STRESS_RELIEF,
+									null,
+									Util.newArrayListOfValues("[npc1.Name] pleasured [npc1.her]self."),
+									true));
+							return events;
+						} else {
+							room.addWatcher(slave);
+							events.add(new SlaveryEventLogEntry(hour, slave,
+									SlaveEvent.JOB_STRESS_RELIEF,
+									null,
+									Util.newArrayListOfValues("[npc1.Name] had to watch..."),
+									true));
+							return events;
+						}
+					}
 					//!TODO! generate events here
-					//!TODO! add player interactions to event list?
+
 					//!TODO! add currently happening events to room, to print detailled event there
 				}
-					return events;
+
 				case MILKING:
 					int income = 0;
 
