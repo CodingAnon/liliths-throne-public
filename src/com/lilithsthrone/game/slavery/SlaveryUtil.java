@@ -319,7 +319,7 @@ public class SlaveryUtil implements XMLSaving {
 	}
 
 	/**
-	 * @param minute Time at which this event is happening.
+	 * @param hour Time at which this event is happening.
 	 * @param slave The slave to calculate an event for.
 	 */
 	private List<SlaveryEventLogEntry> generateEvents(int hour, NPC slave) {
@@ -349,7 +349,15 @@ public class SlaveryUtil implements XMLSaving {
 				case LIBRARY:
 					events.add(new SlaveryEventLogEntry(hour, slave, SlaveEvent.JOB_LIBRARIAN, true));
 					return events;
-					
+
+				case STRESS_RELIEF: {
+					Cell c = StressReliefRoom.getStressReliefCell(slave);
+					StressReliefRoom room = this.getStressReliefRoom(c.getType(), c.getLocation());
+					//!TODO! generate events here
+					//!TODO! add player interactions to event list?
+					//!TODO! add currently happening events to room, to print detailled event there
+				}
+					return events;
 				case MILKING:
 					int income = 0;
 

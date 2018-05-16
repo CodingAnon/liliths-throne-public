@@ -188,8 +188,8 @@ public enum PlaceUpgrade {
 			0,
 			0,
 			0,
-			0,
-			0,
+			1f,
+			-1f,
 			null) {
 
 		@Override
@@ -197,10 +197,10 @@ public enum PlaceUpgrade {
 			GenericPlace place = c.getPlace();
 
 			if(place.getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_LUXURIOUS)) {
-				return "xTODOx room has been upgraded descr";
+				return "!TODO! room has been upgraded descr";
 
 			} else if(place.getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_STRESS_RELIEF_ROOM_INDUSTRIAL)) {
-				return "xTODOx room has been downgraded descr";
+				return "!TODO! room has been downgraded descr";
 
 			}else {
 				return "This room has been equipped with some comfortable beds for your slaves to let them relieve some stress."
@@ -238,15 +238,15 @@ public enum PlaceUpgrade {
 	LILAYA_STRESS_RELIEF_ROOM_INDUSTRIAL(false,
 			Colour.GENERIC_BAD,
 			"Forced Masturbation Devices",
-			"xTODOx downgrade descr.",
-			"xTODOx downgrade descr. 2",
-			"xTODOx downgrade descr. 3",
+			"!TODO! downgrade descr.",
+			"!TODO! downgrade descr. 2",
+			"!TODO! downgrade descr. 3",
 			250,
 			100,
 			-10,
 			0,
-			-0.1f,
-			0.1f,
+			-2f,
+			1f,
 			null) {
 
 		@Override
@@ -257,7 +257,7 @@ public enum PlaceUpgrade {
 		@Override
 		public String getAvailabilityDescription(Cell cell) {
 			if(cell.getPlace().getPlaceUpgrades().contains(LILAYA_STRESS_RELIEF_ROOM_LUXURIOUS)) {
-				return "You'll need to remove the xTODOx before installing this.";
+				return "You'll need to remove the !TODO! before installing this.";
 			}
 			return "";
 		}
@@ -265,16 +265,16 @@ public enum PlaceUpgrade {
 
 	LILAYA_STRESS_RELIEF_ROOM_LUXURIOUS(false,
 			Colour.GENERIC_GOOD,
-			"xTODOx name good",
-			"xTODOx upgrade descr.",
-			"xTODOx upgrade descr. 2",
-			"xTODOx upgrade descr. 3",
+			"!TODO! name good",
+			"!TODO! upgrade descr.",
+			"!TODO! upgrade descr. 2",
+			"!TODO! upgrade descr. 3",
 			250,
 			100,
 			-10,
 			0,
-			0.1f,
-			-0.1f,
+			1f,
+			-2f,
 			null) {
 
 		@Override
