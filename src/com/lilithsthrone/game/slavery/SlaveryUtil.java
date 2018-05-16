@@ -157,7 +157,9 @@ public class SlaveryUtil implements XMLSaving {
 		}
 		
 		// Now can apply changes and generate events based on who else is present in the job:
-		for(String id : Main.game.getPlayer().getSlavesOwned()) {
+		List<String> slaveIDs = Main.game.getPlayer().getSlavesOwned();
+		Collections.shuffle(slaveIDs);
+		for(String id : slaveIDs) {
 			NPC slave = (NPC) Main.game.getNPCById(id);
 			if(Main.game.getPlayer().hasCompanion(slave)) {
 				continue;
